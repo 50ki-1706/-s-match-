@@ -45,20 +45,20 @@ export interface Event {
   id: string;
   title: string;
   description: string;
+  ticketCount?: number | null;
   location: string;
-  eventDate: string; // DateTime -> string (フロントエンド表示用)
-  genre: MusicGenre; // 必須フィールド（schema.prismaに合わせる）
-  fee?: number; // optional（schema.prismaと一致）
-  ticketCount?: number; // 追加（schema.prismaから）
-  deadline?: string; // 追加（schema.prismaから）
-  externalUrl?: string; // 追加（schema.prismaから）
+  externalUrl?: string | null;
+  eventDate: string; // ISO string
+  genre: MusicGenre; // enum
+  fee?: number | null;
+  deadline?: string | null;
 
   status: EventStatus; // 'active' | 'paused' | 'closed' -> EventStatus enum
 
   // フロントエンド専用フィールド（schema.prismaにはない）
-  image?: string;
-  rating?: number;
-  reviewCount?: number;
+  // image?: string;
+  // rating?: number;
+  // reviewCount?: number;
 
   // リレーション
   organizer: {
@@ -110,7 +110,7 @@ export default function Component() {
       rating: 4.8,
       reviewCount: 24,
       location: '渋谷区',
-      genre: 'テクノロジー',
+      genre: 'ROCK',
       organizer: {
         id: '1',
         name: '田中太郎',
@@ -242,13 +242,13 @@ export default function Component() {
   const [newEvent, setNewEvent] = useState({
     title: '',
     description: '',
+    ticketCount: '', // 追加
     location: '',
+    externalUrl: '', // 追加
     eventDate: '', // deadline -> eventDate
     genre: '' as MusicGenre, // string -> MusicGenre enum
     fee: '',
-    ticketCount: '', // 追加
     deadline: '', // 締切日（別フィールド）
-    externalUrl: '', // 追加
   });
 
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -293,30 +293,47 @@ export default function Component() {
 
   // イベント作成ハンドラー
   const { createEvent } = useEvent();
-  const handleCreateEvent = async () => {
-    if (newEvent.title && newEvent.description && newEvent.eventDate && newEvent.capacity) {
-      try {
-        const id = Date.now().toString();
 
-        await createEvent({
-          id,
+  const handleCreateEvent = async () => {
+    // 必須項目だけまずチェック
+    if (
+      newEvent.title &&
+      newEvent.description &&
+      newEvent.eventDate &&
+      newEvent.location &&
+      newEvent.genre
+    ) {
+      try {
+        // Prismaに必要なデータのみ整形
+        const eventData = {
           title: newEvent.title,
           description: newEvent.description,
-          eventDate: newEvent.eventDate,
-          capacity: Number.parseInt(newEvent.capacity),
-          fee: Number.parseInt(newEvent.fee) || 0,
+          eventDate: newEvent.eventDate, // 日付文字列
           location: newEvent.location,
-          genre: newEvent.genre,
-        });
+          genre: newEvent.genre, // enum: MusicGenre
+
+          // optional 値（null許容）
+          fee: newEvent.fee ? parseInt(newEvent.fee) : null,
+          ticketCount: null,
+          deadline: newEvent.deadline || null,
+          externalUrl: null, // UIにまだないので暫定的に null
+        };
+
+        await createEvent(eventData);
+
+        // 入力リセット
         setNewEvent({
           title: '',
           description: '',
-          eventDate: '',
-          capacity: '',
-          fee: '',
+          ticketCount: '',
           location: '',
-          genre: '',
+          externalUrl: '',
+          eventDate: '',
+          genre: '' as MusicGenre, // string -> MusicGenre enum
+          fee: '',
+          deadline: '',
         });
+
         setIsCreateDialogOpen(false);
         alert('イベントを作成しました！');
       } catch (err: any) {
@@ -326,6 +343,41 @@ export default function Component() {
       alert('必須項目が未入力です');
     }
   };
+
+  // const { createEvent } = useEvent();
+  // const handleCreateEvent = async () => {
+  //   if (newEvent.title && newEvent.description && newEvent.eventDate && newEvent.capacity) {
+  //     try {
+  //       const id = Date.now().toString();
+
+  //       await createEvent({
+  //         id,
+  //         title: newEvent.title,
+  //         description: newEvent.description,
+  //         eventDate: newEvent.eventDate,
+  //         capacity: Number.parseInt(newEvent.capacity),
+  //         fee: Number.parseInt(newEvent.fee) || 0,
+  //         location: newEvent.location,
+  //         genre: newEvent.genre,
+  //       });
+  //       setNewEvent({
+  //         title: '',
+  //         description: '',
+  //         eventDate: '',
+  //         capacity: '',
+  //         fee: '',
+  //         location: '',
+  //         genre: '',
+  //       });
+  //       setIsCreateDialogOpen(false);
+  //       alert('イベントを作成しました！');
+  //     } catch (err: any) {
+  //       alert('作成に失敗しました: ' + err.message);
+  //     }
+  //   } else {
+  //     alert('必須項目が未入力です');
+  //   }
+  // };
 
   const handleCardClick = (clickedEvent: Event) => {
     // クリックされたイベントから始まるスワイプリストを作成

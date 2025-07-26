@@ -3,13 +3,13 @@ import { MusicGenre } from '@prisma/client';
 export type CreateEventInput = {
   title: string;
   description: string;
+  ticketCount?: number | null;
   location: string;
+  externalUrl?: string | null;
   eventDate: string; // ISO string
   genre: MusicGenre; // enum
-  fee?: number;
-  ticketCount?: number;
-  deadline?: string; // ISO string
-  externalUrl?: string;
+  fee?: number | null;
+  deadline?: string | null; // ISO string
 };
 
 export type UpdateEventInput = {
