@@ -225,10 +225,10 @@ model UserFavoriteArtist {
 // DMルーム本体
 model ChatRoom {
   id        String   @id @default(cuid())
+  name      String   @default("チャットルーム")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // 参加者一覧（必ず2人だけ登録される想定）
   participants ChatRoomParticipant[]
   Message      Message[]
 }
