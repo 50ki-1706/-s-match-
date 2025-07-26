@@ -1,5 +1,6 @@
 'use client';
 
+import { EventStatus, MusicGenre } from '@prisma/client';
 import type React from 'react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -24,6 +25,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { useEvent } from '@/hooks/useEvents';
 import {
   ArrowLeft,
   Filter,
@@ -39,46 +41,58 @@ import {
 } from 'lucide-react';
 import { useRef, useState } from 'react';
 
-interface Event {
+export interface Event {
   id: string;
   title: string;
   description: string;
-  deadline: string;
-  capacity: number;
-  status: 'active' | 'paused' | 'closed';
-  participants: Participant[];
-  image: string;
-  price: number;
-  rating: number;
-  reviewCount: number;
   location: string;
-  category: string;
-  host: {
+  eventDate: string; // DateTime -> string (フロントエンド表示用)
+  genre: MusicGenre; // 必須フィールド（schema.prismaに合わせる）
+  fee?: number; // optional（schema.prismaと一致）
+  ticketCount?: number; // 追加（schema.prismaから）
+  deadline?: string; // 追加（schema.prismaから）
+  externalUrl?: string; // 追加（schema.prismaから）
+
+  status: EventStatus; // 'active' | 'paused' | 'closed' -> EventStatus enum
+
+  // フロントエンド専用フィールド（schema.prismaにはない）
+  image?: string;
+  rating?: number;
+  reviewCount?: number;
+
+  // リレーション
+  organizer: {
+    // host -> organizer に変更
+    id: string;
     name: string;
-    avatar: string;
+    image?: string; // avatar -> image
   };
-  tags: string[];
+
+  participants: EventParticipant[];
+  applicants: EventApplicant[];
 }
 
-interface Participant {
-  id: string;
-  name: string;
-  email: string;
-  status: 'pending' | 'approved' | 'rejected';
-  appliedAt: string;
-}
-
-interface SwipeAction {
+export interface EventParticipant {
   eventId: string;
-  action: 'like' | 'pass';
-  timestamp: Date;
+  userId: string;
+  feedback?: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    image?: string;
+  };
 }
 
-interface Match {
-  id: string;
-  event: Event;
-  matchedAt: Date;
-  status: 'pending' | 'accepted' | 'declined';
+export interface EventApplicant {
+  eventId: string;
+  userId: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    image?: string;
+  };
 }
 
 export default function Component() {
@@ -88,18 +102,19 @@ export default function Component() {
       title: 'プログラミング勉強会',
       description:
         '初心者向けのプログラミング勉強会です。JavaScriptの基礎から学びます。実際にWebアプリケーションを作成しながら学習します。',
-      deadline: '2024-02-15',
+      eventDate: '2024-02-15',
       capacity: 20,
       status: 'active',
       image: '/placeholder.svg?height=200&width=300',
-      price: 3500,
+      fee: 3500,
       rating: 4.8,
       reviewCount: 24,
       location: '渋谷区',
-      category: 'テクノロジー',
-      host: {
+      genre: 'テクノロジー',
+      organizer: {
+        id: '1',
         name: '田中太郎',
-        avatar: '/placeholder.svg?height=40&width=40',
+        image: '/placeholder.svg?height=40&width=40',
       },
       tags: ['初心者歓迎', 'JavaScript', '実践的', '少人数'],
       participants: [
@@ -131,18 +146,19 @@ export default function Component() {
       title: 'UI/UXデザインワークショップ',
       description:
         'デザイン思考を学び、実際にアプリのUIを設計します。Figmaを使った実践的なワークショップです。',
-      deadline: '2024-02-20',
+      eventDate: '2024-02-20',
       capacity: 15,
       status: 'active',
       image: '/placeholder.svg?height=200&width=300',
-      price: 4200,
+      fee: 4200,
       rating: 4.9,
       reviewCount: 18,
       location: '新宿区',
-      category: 'デザイン',
-      host: {
+      genre: 'デザイン',
+      organizer: {
+        id: '2',
         name: '佐藤美咲',
-        avatar: '/placeholder.svg?height=40&width=40',
+        image: '/placeholder.svg?height=40&width=40',
       },
       tags: ['Figma', 'デザイン思考', '実践', 'プロ指導'],
       participants: [
@@ -160,18 +176,19 @@ export default function Component() {
       title: '写真撮影テクニック講座',
       description:
         'プロカメラマンが教える写真撮影の基本から応用まで。実際に街を歩きながら撮影実習を行います。',
-      deadline: '2024-02-25',
+      eventDate: '2024-02-25',
       capacity: 12,
       status: 'active',
       image: '/placeholder.svg?height=200&width=300',
-      price: 5800,
+      fee: 5800,
       rating: 4.7,
       reviewCount: 31,
       location: '港区',
-      category: 'アート',
-      host: {
+      genre: 'Rock',
+      organizer: {
+        id: '3',
         name: '高橋健一',
-        avatar: '/placeholder.svg?height=40&width=40',
+        image: '/placeholder.svg?height=40&width=40',
       },
       tags: ['プロ指導', '実習', '一眼レフ', '街歩き'],
       participants: [],
@@ -181,18 +198,19 @@ export default function Component() {
       title: '料理教室：和食の基本',
       description:
         '日本料理の基本を学ぶ料理教室です。だしの取り方から始まり、基本的な和食を作ります。',
-      deadline: '2024-03-01',
+      eventDate: '2024-03-01',
       capacity: 8,
       status: 'paused',
       image: '/placeholder.svg?height=200&width=300',
-      price: 6500,
+      fee: 6500,
       rating: 4.6,
       reviewCount: 12,
       location: '世田谷区',
-      category: '料理',
-      host: {
+      genre: '料理',
+      organizer: {
+        id: '4',
         name: '鈴木花子',
-        avatar: '/placeholder.svg?height=40&width=40',
+        image: '/placeholder.svg?height=40&width=40',
       },
       tags: ['和食', '基本', 'だし', '食材込み'],
       participants: [],
@@ -202,18 +220,19 @@ export default function Component() {
       title: 'ヨガ＆瞑想セッション',
       description:
         '心と体をリフレッシュするヨガと瞑想のセッションです。初心者でも安心して参加できます。',
-      deadline: '2024-02-28',
+      eventDate: '2024-02-28',
       capacity: 25,
       status: 'active',
       image: '/placeholder.svg?height=200&width=300',
-      price: 2800,
+      fee: 2800,
       rating: 4.9,
       reviewCount: 45,
       location: '目黒区',
-      category: 'ウェルネス',
-      host: {
+      genre: 'ウェルネス',
+      organizer: {
+        id: '5',
         name: '山田瞳',
-        avatar: '/placeholder.svg?height=40&width=40',
+        image: '/placeholder.svg?height=40&width=40',
       },
       tags: ['初心者歓迎', 'リフレッシュ', 'マット貸出', '瞑想'],
       participants: [],
@@ -223,11 +242,13 @@ export default function Component() {
   const [newEvent, setNewEvent] = useState({
     title: '',
     description: '',
-    deadline: '',
-    capacity: '',
-    price: '',
     location: '',
-    category: '',
+    eventDate: '', // deadline -> eventDate
+    genre: '' as MusicGenre, // string -> MusicGenre enum
+    fee: '',
+    ticketCount: '', // 追加
+    deadline: '', // 締切日（別フィールド）
+    externalUrl: '', // 追加
   });
 
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -248,56 +269,61 @@ export default function Component() {
 
   const categories = [
     'all',
-    'テクノロジー',
-    'デザイン',
-    'アート',
-    '料理',
-    'スポーツ',
-    '音楽',
-    'ウェルネス',
-  ];
+    'POP',
+    'ROCK',
+    'HIP_HOP',
+    'R_B',
+    'JAZZ',
+    'CLASSICAL',
+    'EDM',
+    'COUNTRY',
+    'FOLK',
+    'K_POP',
+    'J_POP',
+    'OTHER',
+  ] as const;
 
   const filteredEvents = events.filter((event) => {
     const matchesSearch =
       event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       event.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || event.category === selectedCategory;
+    const matchesCategory = selectedCategory === 'all' || event.genre === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
-  const handleCreateEvent = () => {
-    if (newEvent.title && newEvent.description && newEvent.deadline && newEvent.capacity) {
-      const event: Event = {
-        id: Date.now().toString(),
-        title: newEvent.title,
-        description: newEvent.description,
-        deadline: newEvent.deadline,
-        capacity: Number.parseInt(newEvent.capacity),
-        price: Number.parseInt(newEvent.price) || 0,
-        location: newEvent.location,
-        category: newEvent.category,
-        status: 'active',
-        image: '/placeholder.svg?height=200&width=300',
-        rating: 0,
-        reviewCount: 0,
-        host: {
-          name: 'あなた',
-          avatar: '/placeholder.svg?height=40&width=40',
-        },
-        tags: [],
-        participants: [],
-      };
-      setEvents([...events, event]);
-      setNewEvent({
-        title: '',
-        description: '',
-        deadline: '',
-        capacity: '',
-        price: '',
-        location: '',
-        category: '',
-      });
-      setIsCreateDialogOpen(false);
+  // イベント作成ハンドラー
+  const { createEvent } = useEvent();
+  const handleCreateEvent = async () => {
+    if (newEvent.title && newEvent.description && newEvent.eventDate && newEvent.capacity) {
+      try {
+        const id = Date.now().toString();
+
+        await createEvent({
+          id,
+          title: newEvent.title,
+          description: newEvent.description,
+          eventDate: newEvent.eventDate,
+          capacity: Number.parseInt(newEvent.capacity),
+          fee: Number.parseInt(newEvent.fee) || 0,
+          location: newEvent.location,
+          genre: newEvent.genre,
+        });
+        setNewEvent({
+          title: '',
+          description: '',
+          eventDate: '',
+          capacity: '',
+          fee: '',
+          location: '',
+          genre: '',
+        });
+        setIsCreateDialogOpen(false);
+        alert('イベントを作成しました！');
+      } catch (err: any) {
+        alert('作成に失敗しました: ' + err.message);
+      }
+    } else {
+      alert('必須項目が未入力です');
     }
   };
 
@@ -555,12 +581,12 @@ export default function Component() {
                       />
                       <div className='absolute left-4 top-4'>
                         <Badge className='bg-white/90 font-medium text-gray-700'>
-                          {currentSwipeEvent.category}
+                          {currentSwipeEvent.genre}
                         </Badge>
                       </div>
                       <div className='absolute right-4 top-4'>
                         <Badge className='bg-rose-500 text-white'>
-                          ¥{currentSwipeEvent.price.toLocaleString()}
+                          ¥{currentSwipeEvent.fee?.toLocaleString()}
                         </Badge>
                       </div>
 
@@ -603,7 +629,7 @@ export default function Component() {
                       </p>
 
                       <div className='flex flex-wrap gap-1'>
-                        {currentSwipeEvent.tags.slice(0, 3).map((tag) => (
+                        {currentSwipeEvent.tags?.slice(0, 3).map((tag) => (
                           <Badge key={tag} variant='secondary' className='text-xs'>
                             {tag}
                           </Badge>
@@ -614,11 +640,15 @@ export default function Component() {
                         <div className='flex items-center gap-2'>
                           <Avatar className='h-8 w-8'>
                             <AvatarImage
-                              src={currentSwipeEvent.host.avatar || '/placeholder.svg'}
+                              src={currentSwipeEvent.organizer.image || '/placeholder.svg'}
                             />
-                            <AvatarFallback>{currentSwipeEvent.host.name.charAt(0)}</AvatarFallback>
+                            <AvatarFallback>
+                              {currentSwipeEvent.organizer.name.charAt(0)}
+                            </AvatarFallback>
                           </Avatar>
-                          <span className='text-sm font-medium'>{currentSwipeEvent.host.name}</span>
+                          <span className='text-sm font-medium'>
+                            {currentSwipeEvent.organizer.name}
+                          </span>
                         </div>
                         <div className='flex items-center gap-1 text-gray-500'>
                           <Users className='h-4 w-4' />
@@ -727,12 +757,12 @@ export default function Component() {
                     </div>
                     <div className='grid grid-cols-2 gap-4'>
                       <div>
-                        <Label htmlFor='price'>料金（円）</Label>
+                        <Label htmlFor='fee'>料金（円）</Label>
                         <Input
-                          id='price'
+                          id='fee'
                           type='number'
-                          value={newEvent.price}
-                          onChange={(e) => setNewEvent({ ...newEvent, price: e.target.value })}
+                          value={newEvent.fee}
+                          onChange={(e) => setNewEvent({ ...newEvent, fee: e.target.value })}
                           placeholder='料金'
                         />
                       </div>
@@ -757,10 +787,10 @@ export default function Component() {
                       />
                     </div>
                     <div>
-                      <Label htmlFor='category'>カテゴリ</Label>
+                      <Label htmlFor='genre'>カテゴリ</Label>
                       <Select
-                        value={newEvent.category}
-                        onValueChange={(value) => setNewEvent({ ...newEvent, category: value })}
+                        value={newEvent.genre}
+                        onValueChange={(value) => setNewEvent({ ...newEvent, genre: value })}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder='カテゴリを選択' />
@@ -775,12 +805,12 @@ export default function Component() {
                       </Select>
                     </div>
                     <div>
-                      <Label htmlFor='deadline'>締切日</Label>
+                      <Label htmlFor='eventDate'>締切日</Label>
                       <Input
-                        id='deadline'
+                        id='eventDate'
                         type='date'
-                        value={newEvent.deadline}
-                        onChange={(e) => setNewEvent({ ...newEvent, deadline: e.target.value })}
+                        value={newEvent.eventDate}
+                        onChange={(e) => setNewEvent({ ...newEvent, eventDate: e.target.value })}
                       />
                     </div>
                     <div className='flex gap-2 pt-4'>
@@ -868,7 +898,7 @@ export default function Component() {
                 <div className='absolute right-3 top-3'>{getStatusBadge(event.status)}</div>
                 <div className='absolute left-3 top-3'>
                   <Badge variant='secondary' className='bg-white/90 text-gray-700'>
-                    {event.category}
+                    {event.genre}
                   </Badge>
                 </div>
                 <div className='absolute inset-0 flex items-center justify-center rounded-t-lg bg-black/0 transition-all duration-300 group-hover:bg-black/10'>
@@ -899,10 +929,10 @@ export default function Component() {
                 <div className='mb-3 flex items-center justify-between'>
                   <div className='flex items-center gap-2'>
                     <Avatar className='h-6 w-6'>
-                      <AvatarImage src={event.host.avatar || '/placeholder.svg'} />
-                      <AvatarFallback>{event.host.name.charAt(0)}</AvatarFallback>
+                      <AvatarImage src={event.organizer.image || '/placeholder.svg'} />
+                      <AvatarFallback>{event.organizer.name.charAt(0)}</AvatarFallback>
                     </Avatar>
-                    <span className='text-sm text-gray-600'>{event.host.name}</span>
+                    <span className='text-sm text-gray-600'>{event.organizer.name}</span>
                   </div>
                   <div className='flex items-center gap-1 text-gray-500'>
                     <Users className='h-4 w-4' />
@@ -914,7 +944,7 @@ export default function Component() {
                 </div>
                 <div className='flex items-center justify-between'>
                   <div>
-                    <span className='text-lg font-bold'>¥{event.price.toLocaleString()}</span>
+                    <span className='text-lg font-bold'>¥{event.fee?.toLocaleString()}</span>
                     <span className='text-sm text-gray-500'> / 人</span>
                   </div>
                   <Badge variant='outline' className='border-rose-200 text-rose-500'>
@@ -960,8 +990,8 @@ export default function Component() {
                 </Avatar>
                 <Heart className='h-8 w-8 text-rose-500' />
                 <Avatar className='h-16 w-16'>
-                  <AvatarImage src={showMatch.host.avatar || '/placeholder.svg'} />
-                  <AvatarFallback>{showMatch.host.name.charAt(0)}</AvatarFallback>
+                  <AvatarImage src={showMatch.organizer.image || '/placeholder.svg'} />
+                  <AvatarFallback>{showMatch.organizer.name.charAt(0)}</AvatarFallback>
                 </Avatar>
               </div>
               <Button className='w-full bg-rose-500 hover:bg-rose-600'>メッセージを送る</Button>
