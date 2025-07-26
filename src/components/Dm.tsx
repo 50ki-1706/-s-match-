@@ -4,11 +4,21 @@ import { Message, User } from '@/lib/types/dm';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
-const Dm = ({ userId }: { userId: string | undefined }) => {
+const Dm = ({
+  userId,
+  supabaseUrl,
+  supabaseKey,
+}: {
+  userId: string | undefined;
+  supabaseUrl: string;
+  supabaseKey: string;
+}) => {
   const { id: dmId } = useParams();
   const { messageState, handleSendMessage, otherUser } = useDm({
     dmId: dmId as string,
     userId: userId,
+    supabaseUrl,
+    supabaseKey,
   });
 
   return (

@@ -4,5 +4,8 @@ import Dm from '@/components/Dm';
 export default async function Server() {
   const session = await auth();
   const userId = session?.user?.id;
-  return <Dm userId={userId} />;
+
+  const supabaseUrl = process.env.SUPABASE_URL || '';
+  const supabaseKey = process.env.SUPABASE_KEY || '';
+  return <Dm userId={userId} supabaseUrl={supabaseUrl} supabaseKey={supabaseKey} />;
 }

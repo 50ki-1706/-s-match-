@@ -12,6 +12,7 @@ export const getProfile = async (userId: string): Promise<UserProfile> => {
       email: true,
       gender: true,
       image: true,
+      headerImage: true,
       age: true,
       bio: true,
       UserFavoriteGenre: {
@@ -21,6 +22,9 @@ export const getProfile = async (userId: string): Promise<UserProfile> => {
         select: { artist: true },
       },
       Event: {
+        select: { id: true, title: true },
+      },
+      Blog: {
         select: { id: true, title: true },
       },
     },
@@ -39,6 +43,7 @@ export const updateProfile = async (profile: UserProfileUpdate, userId: string) 
     data: {
       name: profile.name,
       image: profile.image,
+      headerImage: profile.headerImage,
       gender: profile.gender,
       age: profile.age,
       bio: profile.bio,

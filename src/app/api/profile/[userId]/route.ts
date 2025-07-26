@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getProfile, updateProfile } from '../../(Repository)/profile';
 
-export async function GET(request: NextRequest, { params }: { params: { userId: string } }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ userId: string }> },
+) {
   try {
     const { userId } = await params;
     const profile = await getProfile(userId);
@@ -11,7 +14,10 @@ export async function GET(request: NextRequest, { params }: { params: { userId: 
   }
 }
 
-export async function PATCH(request: NextRequest, { params }: { params: { userId: string } }) {
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ userId: string }> },
+) {
   try {
     const { userId } = await params;
     const body = await request.json();

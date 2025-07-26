@@ -4,9 +4,18 @@ import { DmRoomWithMessages } from '@/app/api/(type)/message';
 import { Message, User } from '@/lib/types/dm';
 import { createClient, RealtimeChannel } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
-import { SUPABASE_KEY, SUPABASE_URL } from '../../supabase-env';
 
-export const useDm = ({ dmId, userId }: { dmId: string; userId: string | undefined }) => {
+export const useDm = ({
+  dmId,
+  userId,
+  supabaseUrl,
+  supabaseKey,
+}: {
+  dmId: string;
+  userId: string | undefined;
+  supabaseUrl: string;
+  supabaseKey: string;
+}) => {
   const [messageState, setMessageState] = useState<Message[]>([]);
   const [channel, setChannel] = useState<RealtimeChannel | undefined>(undefined);
   const [otherUser, setOtherUser] = useState<User>({
@@ -43,7 +52,7 @@ export const useDm = ({ dmId, userId }: { dmId: string; userId: string | undefin
   //websocketに関する処理
   useEffect(() => {
     //websoketチャンネルを作成
-    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+    const supabase = createClient(supabaseUrl, supabaseKey);
     const newChannel = supabase.channel('test-channel');
     setChannel(newChannel);
 

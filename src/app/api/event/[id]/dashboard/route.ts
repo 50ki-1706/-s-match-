@@ -7,9 +7,9 @@ import {
   updateEvent,
 } from '../../../(Repository)/event';
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const eventId = params.id;
+    const { id: eventId } = await params;
     const userId = await userIdInApi();
 
     const event = await getEventForDashboard(eventId);
@@ -57,10 +57,14 @@ export async function PATCH(request: NextRequest) {
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
   try {
     const userId = await userIdInApi();
-    const event = await findEvent(params.id);
+    const { id: eventId } = await params;
+    const event = await findEvent(eventId);
 
     if (!event) {
       return NextResponse.json({ message: 'Event not found' }, { status: 404 });
@@ -73,7 +77,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       );
     }
 
-    await deleteEvent(params.id);
+    await deleteEvent(eventId);
 
     return NextResponse.json({ message: 'Event deleted successfully' }, { status: 204 });
   } catch (error) {

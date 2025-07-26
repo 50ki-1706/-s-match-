@@ -2,7 +2,7 @@ import { userIdInApi } from '@/app/api/(lib)/userIdInApi';
 import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const userId = await userIdInApi();
     const { id: eventId } = await params;

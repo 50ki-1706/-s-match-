@@ -8,7 +8,7 @@ import {
 import { NextRequest, NextResponse } from 'next/server';
 import { userIdInApi } from '../../../(lib)/userIdInApi';
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const userId = await userIdInApi();
     const { id: roomId } = await params;
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const senderId = await userIdInApi();
     const { id: roomId } = await params;
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
   }
 }
 
-export async function PATCH(request: NextRequest) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const userId = await userIdInApi();
     const { messageId, content } = await request.json();
@@ -83,7 +83,10 @@ export async function PATCH(request: NextRequest) {
   }
 }
 
-export async function DELETE(request: NextRequest) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
   try {
     const userId = await userIdInApi();
     const { messageId } = await request.json();
