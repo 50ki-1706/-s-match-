@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import type { Participant } from '@/lib/types/event-list';
 import { MessageCircle, Trash2, UserPlus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface ParticipantCardProps {
   participant: Participant;
@@ -19,7 +20,10 @@ export const ParticipantCard = ({
   onDelete,
   onInvite,
 }: ParticipantCardProps) => {
+  const router = useRouter();
+
   const handleDM = () => {
+    createChatRoom(participant.id);
     if (onDM) {
       onDM(participant.id);
     }
@@ -40,6 +44,21 @@ export const ParticipantCard = ({
   const getInitial = (name: string): string => {
     if (!name) return '?';
     return name[0];
+  };
+
+  const createChatRoom = async (userId: string) => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/chat`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId: 'cmdl7l7yy00012kjlp3509a48' }),
+    });
+    console.log(res);
+
+    const newChatRoom = await res.json();
+
+    router.push(`/chat/${newChatRoom.id}`);
   };
 
   return (
