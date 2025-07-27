@@ -99,14 +99,13 @@ export default function Component() {
   const [events, setEvents] = useState<Event[]>([
     {
       id: '1',
-      title: 'プログラミング勉強会',
-      description:
-        '初心者向けのプログラミング勉強会です。JavaScriptの基礎から学びます。実際にWebアプリケーションを作成しながら学習します。',
+      title: 'サカナクションのライブ行きましょう！',
+      description: 'サカナクションのライブに一緒に参加しませんか？',
       eventDate: '2024-02-15',
       capacity: 20,
-      status: 'active',
+      status: 'OPEN',
       image: '/placeholder.svg?height=200&width=300',
-      fee: 3500,
+      fee: 0,
       rating: 4.8,
       reviewCount: 24,
       location: '渋谷区',
@@ -148,7 +147,7 @@ export default function Component() {
         'デザイン思考を学び、実際にアプリのUIを設計します。Figmaを使った実践的なワークショップです。',
       eventDate: '2024-02-20',
       capacity: 15,
-      status: 'active',
+      status: 'OPEN',
       image: '/placeholder.svg?height=200&width=300',
       fee: 4200,
       rating: 4.9,
@@ -178,13 +177,13 @@ export default function Component() {
         'プロカメラマンが教える写真撮影の基本から応用まで。実際に街を歩きながら撮影実習を行います。',
       eventDate: '2024-02-25',
       capacity: 12,
-      status: 'active',
+      status: 'OPEN',
       image: '/placeholder.svg?height=200&width=300',
       fee: 5800,
       rating: 4.7,
       reviewCount: 31,
       location: '港区',
-      genre: 'Rock',
+      genre: 'ROCK',
       organizer: {
         id: '3',
         name: '高橋健一',
@@ -200,13 +199,13 @@ export default function Component() {
         '日本料理の基本を学ぶ料理教室です。だしの取り方から始まり、基本的な和食を作ります。',
       eventDate: '2024-03-01',
       capacity: 8,
-      status: 'paused',
+      status: 'OPEN',
       image: '/placeholder.svg?height=200&width=300',
       fee: 6500,
       rating: 4.6,
       reviewCount: 12,
       location: '世田谷区',
-      genre: '料理',
+      genre: 'CLASSICAL',
       organizer: {
         id: '4',
         name: '鈴木花子',
@@ -222,13 +221,13 @@ export default function Component() {
         '心と体をリフレッシュするヨガと瞑想のセッションです。初心者でも安心して参加できます。',
       eventDate: '2024-02-28',
       capacity: 25,
-      status: 'active',
+      status: 'OPEN',
       image: '/placeholder.svg?height=200&width=300',
       fee: 2800,
       rating: 4.9,
       reviewCount: 45,
       location: '目黒区',
-      genre: 'ウェルネス',
+      genre: 'CLASSICAL',
       organizer: {
         id: '5',
         name: '山田瞳',
@@ -319,7 +318,7 @@ export default function Component() {
           externalUrl: null, // UIにまだないので暫定的に null
         };
 
-        await createEvent(eventData);
+        const createdEvent = await createEvent(eventData);
 
         // 入力リセット
         setNewEvent({
@@ -336,6 +335,7 @@ export default function Component() {
 
         setIsCreateDialogOpen(false);
         alert('イベントを作成しました！');
+        setEvents((prev) => [createdEvent, ...prev]); // 新しいイベントを先頭に追加
       } catch (err: any) {
         alert('作成に失敗しました: ' + err.message);
       }
@@ -764,13 +764,13 @@ export default function Component() {
         <div className='container mx-auto px-6 py-4'>
           <div className='flex items-center justify-between'>
             <div className='flex items-center gap-8'>
-              <h1 className='text-2xl font-bold text-rose-500'>EventHub</h1>
+              <h1 className='text-2xl font-bold text-rose-500'>μ's MATCH!</h1>
               <div className='hidden items-center gap-6 md:flex'>
                 <Button variant='ghost' className='text-gray-700'>
-                  体験
+                  チャット
                 </Button>
                 <Button variant='ghost' className='text-gray-700'>
-                  オンライン体験
+                  イベント検索
                 </Button>
               </div>
             </div>
@@ -779,22 +779,22 @@ export default function Component() {
                 <DialogTrigger asChild>
                   <Button className='bg-rose-500 hover:bg-rose-600'>
                     <Plus className='mr-2 h-4 w-4' />
-                    体験を作成
+                    イベントを作成
                   </Button>
                 </DialogTrigger>
                 <DialogContent className='max-w-md'>
                   <DialogHeader>
-                    <DialogTitle>新しい体験を作成</DialogTitle>
-                    <DialogDescription>体験の詳細を入力してください</DialogDescription>
+                    <DialogTitle>新しいイベントを作成</DialogTitle>
+                    <DialogDescription>イベントの詳細を入力してください</DialogDescription>
                   </DialogHeader>
                   <div className='space-y-4'>
                     <div>
-                      <Label htmlFor='title'>体験名</Label>
+                      <Label htmlFor='title'>イベント名</Label>
                       <Input
                         id='title'
                         value={newEvent.title}
                         onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
-                        placeholder='体験名を入力'
+                        placeholder='イベント名を入力'
                       />
                     </div>
                     <div>
@@ -803,7 +803,7 @@ export default function Component() {
                         id='description'
                         value={newEvent.description}
                         onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
-                        placeholder='体験の詳細を入力'
+                        placeholder='イベントの詳細を入力'
                         rows={3}
                       />
                     </div>
@@ -911,7 +911,7 @@ export default function Component() {
           <div className='relative flex-1'>
             <Search className='absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 transform text-gray-400' />
             <Input
-              placeholder='体験を検索...'
+              placeholder='イベントを検索...'
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className='h-12 border-gray-300 pl-10'
@@ -923,7 +923,7 @@ export default function Component() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value='all'>すべてのカテゴリ</SelectItem>
+              <SelectItem value='all'>すべてのジャンル</SelectItem>
               {categories.slice(1).map((category) => (
                 <SelectItem key={category} value={category}>
                   {category}
@@ -986,13 +986,6 @@ export default function Component() {
                     </Avatar>
                     <span className='text-sm text-gray-600'>{event.organizer.name}</span>
                   </div>
-                  <div className='flex items-center gap-1 text-gray-500'>
-                    <Users className='h-4 w-4' />
-                    <span className='text-sm'>
-                      {event.participants.filter((p) => p.status === 'approved').length}/
-                      {event.capacity}
-                    </span>
-                  </div>
                 </div>
                 <div className='flex items-center justify-between'>
                   <div>
@@ -1013,7 +1006,7 @@ export default function Component() {
             <div className='mb-4 text-gray-400'>
               <Search className='mx-auto h-16 w-16' />
             </div>
-            <h3 className='mb-2 text-xl font-semibold text-gray-600'>体験が見つかりません</h3>
+            <h3 className='mb-2 text-xl font-semibold text-gray-600'>イベントが見つかりません</h3>
             <p className='text-gray-500'>検索条件を変更してお試しください</p>
           </div>
         )}
