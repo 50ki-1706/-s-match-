@@ -36,17 +36,18 @@ const TagsArea = ({
         <div>
           <h4 className='mb-2 font-medium'>ジャンル</h4>
           <div className='mb-2 flex flex-wrap gap-2'>
-            {genres.map((genre: MusicGenre, index: number) => (
-              <Badge
-                key={index}
-                variant='secondary'
-                className='cursor-pointer'
-                style={{ backgroundColor: '#0de1db', color: 'white' }}
-                onClick={() => isEditing && removeTag('genre', index)}
-              >
-                {genre} {isEditing && '×'}
-              </Badge>
-            ))}
+            {genres &&
+              genres.map((genre: MusicGenre, index: number) => (
+                <Badge
+                  key={index}
+                  variant='secondary'
+                  className='cursor-pointer'
+                  style={{ backgroundColor: '#0de1db', color: 'white' }}
+                  onClick={() => isEditing && removeTag('genre', index)}
+                >
+                  {genre} {isEditing && '×'}
+                </Badge>
+              ))}
           </div>
           {isEditing && (
             <div className='flex gap-2'>
