@@ -16,11 +16,29 @@ type newTagType = MusicGenre | string;
 
 export const ProfileTab = ({ profileData, isEditing }: ProfileTabProps) => {
   const { bio, UserFavoriteGenre, UserFavoriteArtist } = profileData;
-  const [genres, setGenres] = useState<MusicGenre[]>(UserFavoriteGenre);
-  const [artists, setArtists] = useState(UserFavoriteArtist);
+  // const [genres, setGenres] = useState<MusicGenre[]>(UserFavoriteGenre);
+  // const [artists, setArtists] = useState(UserFavoriteArtist);
+  const [genres, setGenres] = useState<MusicGenre[]>([
+    'ROCK',
+    'JAZZ',
+    'CLASSICAL',
+    'HIP_HOP',
+    'EDM',
+    'J_POP',
+    'FOLK',
+    'BLUES',
+    'REGGAE',
+  ]);
+  const [artists, setArtists] = useState<string[]>(['藤井風', 'Beatles', 'サカナクション']);
+
   const [newTag, setNewTag] = useState<newTagType>('');
   const [profileText, setProfileText] = useState(bio || 'よろしくお願いします');
-  const [pastEvents, setPastEvents] = useState<{ date: string; name: string }[]>([]);
+  const [pastEvents, setPastEvents] = useState<{ date: string; name: string }[]>(
+    ['2023-10-01'].map((date) => ({
+      date,
+      name: 'Billie Eilishのライブ',
+    })),
+  );
 
   const newTagTrim = (value: string) => {
     return value.trim();
