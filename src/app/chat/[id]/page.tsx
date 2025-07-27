@@ -1,5 +1,5 @@
 import { auth } from '@/auth';
-import Dm from '@/components/Dm';
+import Chat from '@/components/Chat';
 
 export default async function Server() {
   const session = await auth();
@@ -7,5 +7,5 @@ export default async function Server() {
 
   const supabaseUrl = process.env.SUPABASE_URL || '';
   const supabaseKey = process.env.SUPABASE_KEY || '';
-  return <Dm userId={userId} supabaseUrl={supabaseUrl} supabaseKey={supabaseKey} />;
+  return <Chat userId={userId} supabaseUrl={supabaseUrl} supabaseKey={supabaseKey} />;
 }

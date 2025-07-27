@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const dmRoomWithMessagesSchema = z.object({
+export const chatRoomWithMessagesSchema = z.object({
   id: z.string(),
   participants: z.array(
     z.object({
@@ -46,6 +46,6 @@ export const patchReqSchema = z.object({
   content: z.string(),
 });
 
-export type DmRoomWithMessages = z.infer<typeof dmRoomWithMessagesSchema>;
+export type ChatRoomWithMessages = z.infer<typeof chatRoomWithMessagesSchema>;
 
 export type MessageCreated = z.infer<typeof messageCreatedSchema>;

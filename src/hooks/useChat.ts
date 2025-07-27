@@ -1,17 +1,17 @@
 'use client';
 
-import { DmRoomWithMessages } from '@/app/api/(type)/message';
+import { ChatRoomWithMessages } from '@/app/api/(type)/message';
 import { Message, User } from '@/lib/types/dm';
 import { createClient, RealtimeChannel } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 
-export const useDm = ({
-  dmId,
+export const useChat = ({
+  chatId,
   userId,
   supabaseUrl,
   supabaseKey,
 }: {
-  dmId: string;
+  chatId: string;
   userId: string | undefined;
   supabaseUrl: string;
   supabaseKey: string;
@@ -30,7 +30,7 @@ export const useDm = ({
 
   const handleSendMessage = async (messageContent: string): Promise<void> => {
     //バックエンドにメッセージを送信
-    const newMessage = await sendMessage(dmId, messageContent);
+    const newMessage = await sendMessage(chatId, messageContent);
 
     //websocketで相手にメッセージを送信
     broadcastMessage(newMessage);
@@ -70,7 +70,7 @@ export const useDm = ({
   }, []);
 
   useEffect(() => {
-    fetchDmRoomWithMessages(dmId).then((res) => {
+    fetchChatRoomWithMessages(chatId).then((res) => {
       setMessageState(res.messages);
 
       const otherUser = res.participants.find((p) => p.user.id !== userId)?.user;
@@ -78,14 +78,14 @@ export const useDm = ({
         setOtherUser(otherUser);
       }
     });
-  }, [dmId]);
+  }, [chatId]);
 
   return { messageState, handleSendMessage, otherUser };
 };
 
-const fetchDmRoomWithMessages = async (dmId: string): Promise<DmRoomWithMessages> => {
+const fetchChatRoomWithMessages = async (chatId: string): Promise<ChatRoomWithMessages> => {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/dm/${dmId}/message`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/chat/${chatId}/message`);
     const data = await res.json();
 
     return data;
@@ -94,9 +94,9 @@ const fetchDmRoomWithMessages = async (dmId: string): Promise<DmRoomWithMessages
   }
 };
 
-const sendMessage = async (dmId: string, messageContent: string) => {
+const sendMessage = async (chatId: string, messageContent: string) => {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/dm/${dmId}/message`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/chat/${chatId}/message`, {
       method: 'POST',
       body: JSON.stringify({ content: messageContent }),
     });
@@ -107,9 +107,9 @@ const sendMessage = async (dmId: string, messageContent: string) => {
   }
 };
 
-const updateMessage = async (dmId: string, messageId: string, messageContent: string) => {
+const updateMessage = async (chatId: string, messageId: string, messageContent: string) => {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/dm/${dmId}/message`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/chat/${chatId}/message`, {
       method: 'PATCH',
       body: JSON.stringify({ messageId, content: messageContent }),
     });
@@ -120,9 +120,9 @@ const updateMessage = async (dmId: string, messageId: string, messageContent: st
   }
 };
 
-const deleteMessage = async (dmId: string, messageId: string) => {
+const deleteMessage = async (chatId: string, messageId: string) => {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/dm/${dmId}/message`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/chat/${chatId}/message`, {
       method: 'DELETE',
       body: JSON.stringify({ messageId }),
     });

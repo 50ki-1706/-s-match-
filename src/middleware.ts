@@ -16,11 +16,5 @@ const checkAuth = async (request: NextRequest) => {
 };
 
 export const config = {
-  matcher: [
-    '/api',
-    '/api/profile/:path*',
-    '/api/dm/:path*',
-    '/api/matching/:path*',
-    '/api/event/:path*',
-  ],
+  matcher: ['/api/profile/:path*', '/api/chat/:path*', '/api/event/:path*', '/api/blog/:path*'],
 };

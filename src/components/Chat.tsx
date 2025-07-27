@@ -1,10 +1,11 @@
 'use client';
-import { useDm } from '@/hooks/useDm';
+import { useChat } from '@/hooks/useChat';
 import { Message, User } from '@/lib/types/dm';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
-const Dm = ({
+
+const Chat = ({
   userId,
   supabaseUrl,
   supabaseKey,
@@ -13,9 +14,9 @@ const Dm = ({
   supabaseUrl: string;
   supabaseKey: string;
 }) => {
-  const { id: dmId } = useParams();
-  const { messageState, handleSendMessage, otherUser } = useDm({
-    dmId: dmId as string,
+  const { id: chatId } = useParams();
+  const { messageState, handleSendMessage, otherUser } = useChat({
+    chatId: chatId as string,
     userId: userId,
     supabaseUrl,
     supabaseKey,
@@ -139,4 +140,4 @@ const MessageInput = ({
     </div>
   );
 };
-export default Dm;
+export default Chat;

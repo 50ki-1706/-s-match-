@@ -7,11 +7,11 @@ export const POST = async (
   { params }: { params: Promise<{ id: string; commentId: string }> },
 ) => {
   try {
-    const { id: blogId } = await params;
+    const { commentId } = await params;
     const userId = await userIdInApi();
 
     // コメントいいねを作成
-    await createCommentLike(blogId, userId);
+    await createCommentLike(commentId, userId);
 
     // 204 No Content を返す
     return NextResponse.json(null, { status: 204 });
