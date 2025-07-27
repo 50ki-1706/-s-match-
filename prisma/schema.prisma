@@ -70,7 +70,6 @@ enum MusicGenre {
   OTHER
 }
 
-
 model User {
   id            String          @id @default(cuid())
   name          String
@@ -90,18 +89,19 @@ model User {
   UserFavoriteGenre  UserFavoriteGenre[] // お気に入りジャンル
   UserFavoriteArtist UserFavoriteArtist[] // お気に入りアーティスト
 
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   Event     Event[]
 
-  ChatRoomParticipant ChatRoomParticipant[]
-  Message             Message[]
-  EventParticipant    EventParticipant[] // イベントの参加者リスト
-  EventApplicant      EventApplicant[] // イベントの応募者リスト
-  Blog                Blog[]
-  BlogLike            BlogLike[]
-  BlogComment         BlogComment[]
-  BlogCommentLike     BlogCommentLike[]
+  DmRoomParticipant DmRoomParticipant[]
+  DmMessage         DmMessage[]
+  EventParticipant  EventParticipant[] // イベントの参加者リスト
+  EventApplicant    EventApplicant[] // イベントの応募者リスト
+  Blog              Blog[]
+  BlogLike          BlogLike[]
+  BlogComment       BlogComment[]
+  BlogCommentLike   BlogCommentLike[]
+  ChatMessage       ChatMessage[]
 }
 
 model Account {
@@ -179,8 +179,11 @@ model Event {
   participantsList EventParticipant[] // イベントの参加者リスト
   applicants       EventApplicant[] // イベントの応募者リスト
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  chatRoomName String
+
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  ChatMessage ChatMessage[]
 }
 
 model EventApplicant {
@@ -202,6 +205,17 @@ model EventParticipant {
   @@id([eventId, userId])
 }
 
+// イベントのチャットルームのメッセージ
+model ChatMessage {
+  roomId String
+  userId String
+
+  chatRoom Event @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user     User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([roomId, userId])
+}
+
 model UserFavoriteGenre {
   userId String
   genre  MusicGenre
@@ -220,31 +234,29 @@ model UserFavoriteArtist {
   @@id([userId, artist])
 }
 
-
-
 // DMルーム本体
-model ChatRoom {
+model DmRoom {
   id        String   @id @default(cuid())
   name      String   @default("チャットルーム")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  participants ChatRoomParticipant[]
-  Message      Message[]
+  participants DmRoomParticipant[]
+  messages     DmMessage[]
 }
 
 // DMルーム ⇔ ユーザー の中間テーブル
-model ChatRoomParticipant {
+model DmRoomParticipant {
   roomId String
   userId String
 
-  chatRoom ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dmRoom DmRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([roomId, userId])
 }
 
-model Message {
+model DmMessage {
   id        String   @id @default(cuid())
   roomId    String
   senderId  String
@@ -252,8 +264,8 @@ model Message {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  room   ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
-  sender User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  room   DmRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  sender User   @relation(fields: [senderId], references: [id], onDelete: Cascade)
 }
 
 model Blog {
