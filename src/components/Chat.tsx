@@ -1,6 +1,6 @@
 'use client';
 import { useChat } from '@/hooks/useChat';
-import { Message, User } from '@/lib/types/dm';
+import { Message, User } from '@/lib/types/chat';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';

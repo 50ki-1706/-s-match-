@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from './prisma';
-import { apiRes } from './types';
+import { apiRes } from './types/profile';
 
 export const handleAPIError = async (
   fn: () => Promise<NextResponse<apiRes>>,

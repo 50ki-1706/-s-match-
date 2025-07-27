@@ -5,6 +5,7 @@ import { getProfile, updateProfile } from '../(Repository)/profile';
 export async function GET(request: NextRequest) {
   try {
     const userId = await userIdInApi();
+    console.log(userId);
     const profile = await getProfile(userId);
     return NextResponse.json(profile);
   } catch (error) {

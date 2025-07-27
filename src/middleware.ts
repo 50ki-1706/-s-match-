@@ -8,6 +8,7 @@ export async function middleware(request: NextRequest) {
 
 const checkAuth = async (request: NextRequest) => {
   const session = await auth();
+  console.log(session + 'checkAuth');
   if (!session) {
     return new NextResponse('Unauthorized', { status: 401 });
   }
