@@ -83,10 +83,10 @@ const TagsArea = ({
             <div className='flex gap-2'>
               <Input
                 placeholder='新しいアーティストを追加'
-                value={newArtistTag}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewArtistTag(e.target.value)}
+                value={newTag}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewTag(e.target.value)}
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) =>
-                  e.key === 'Enter' && addTag('artist', newArtistTag)
+                  e.key === 'Enter' && addTag('artist', newTag)
                 }
               />
               <Button onClick={() => addTag('artist', newTag)} size='sm'>
