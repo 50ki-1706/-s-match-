@@ -36,13 +36,15 @@ const Header = ({ otherUser }: { otherUser: User }) => {
     <div className='min-h-14 border-b border-gray-200 bg-white px-6 py-4 shadow-sm'>
       <div className='flex items-center space-x-3'>
         <Image
-          src={otherUser.image || '/user.jpeg'}
+          // src={otherUser.image || '/user.jpeg'}
+          src={'/user.jpeg'}
           alt={otherUser.name}
           width={32}
           height={32}
           className='shrink-0 rounded-full object-cover'
         />
-        <p>{otherUser.name}</p>
+        {/* <p>{otherUser.name}</p> */}
+        <p>田中花子</p>
       </div>
     </div>
   );
