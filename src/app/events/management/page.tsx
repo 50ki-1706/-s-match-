@@ -302,7 +302,7 @@ export default function Component() {
         <div className='container mx-auto px-6 py-4'>
           <div className='flex items-center justify-between'>
             <div className='flex items-center gap-8'>
-              <h1 className='text-2xl font-bold text-rose-500'>EventHub</h1>
+              <h1 className='text-2xl font-bold text-rose-500'>μ&apos;s MATCH!</h1>
               <div className='hidden items-center gap-6 md:flex'>
                 <Button variant='ghost' className='text-gray-700'>
                   体験
@@ -316,7 +316,7 @@ export default function Component() {
               <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
                 <DialogTrigger asChild>
                   <Button className='bg-rose-500 hover:bg-rose-600'>
-                    <Plus className='mr-2 h-4 w-4' />
+                    <Plus className='mr-2 size-4' />
                     体験を作成
                   </Button>
                 </DialogTrigger>
@@ -422,7 +422,7 @@ export default function Component() {
                 </DialogContent>
               </Dialog>
               <Button variant='ghost' size='icon'>
-                <Heart className='h-5 w-5' />
+                <Heart className='size-5' />
               </Button>
               <Avatar>
                 <AvatarImage src='/placeholder.svg?height=32&width=32' />
@@ -434,10 +434,10 @@ export default function Component() {
       </div>
 
       {/* Search and Filters */}
-      <div className='container mx-auto px-6 py-6'>
+      <div className='container mx-auto p-6'>
         <div className='mb-8 flex flex-col gap-4 md:flex-row'>
           <div className='relative flex-1'>
-            <Search className='absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 transform text-gray-400' />
+            <Search className='absolute left-3 top-1/2 size-5 -translate-y-1/2 text-gray-400' />
             <Input
               placeholder='体験を検索...'
               value={searchQuery}
@@ -447,7 +447,7 @@ export default function Component() {
           </div>
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
             <SelectTrigger className='h-12 w-full md:w-48'>
-              <Filter className='mr-2 h-4 w-4' />
+              <Filter className='mr-2 size-4' />
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -484,12 +484,12 @@ export default function Component() {
               <CardContent className='p-4'>
                 <div className='mb-2 flex items-center gap-2'>
                   <div className='flex items-center gap-1'>
-                    <Star className='h-4 w-4 fill-yellow-400 text-yellow-400' />
+                    <Star className='size-4 fill-yellow-400 text-yellow-400' />
                     <span className='text-sm font-medium'>{event.rating}</span>
                     <span className='text-sm text-gray-500'>({event.reviewCount})</span>
                   </div>
                   <div className='flex items-center gap-1 text-gray-500'>
-                    <MapPin className='h-4 w-4' />
+                    <MapPin className='size-4' />
                     <span className='text-sm'>{event.location}</span>
                   </div>
                 </div>
@@ -499,14 +499,14 @@ export default function Component() {
                 <p className='mb-3 line-clamp-2 text-sm text-gray-600'>{event.description}</p>
                 <div className='mb-3 flex items-center justify-between'>
                   <div className='flex items-center gap-2'>
-                    <Avatar className='h-6 w-6'>
+                    <Avatar className='size-6'>
                       <AvatarImage src={event.host.avatar || '/placeholder.svg'} />
                       <AvatarFallback>{event.host.name.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <span className='text-sm text-gray-600'>{event.host.name}</span>
                   </div>
                   <div className='flex items-center gap-1 text-gray-500'>
-                    <Users className='h-4 w-4' />
+                    <Users className='size-4' />
                     <span className='text-sm'>
                       {event.participants.filter((p) => p.status === 'approved').length}/
                       {event.capacity}
@@ -535,7 +535,7 @@ export default function Component() {
         {filteredEvents.length === 0 && (
           <div className='py-12 text-center'>
             <div className='mb-4 text-gray-400'>
-              <Search className='mx-auto h-16 w-16' />
+              <Search className='mx-auto size-16' />
             </div>
             <h3 className='mb-2 text-xl font-semibold text-gray-600'>体験が見つかりません</h3>
             <p className='text-gray-500'>検索条件を変更してお試しください</p>
@@ -552,21 +552,21 @@ export default function Component() {
                 <img
                   src={selectedEvent.image || '/placeholder.svg'}
                   alt={selectedEvent.title}
-                  className='h-24 w-24 rounded-lg object-cover'
+                  className='size-24 rounded-lg object-cover'
                 />
                 <div className='flex-1'>
                   <DialogTitle className='mb-2 text-xl'>{selectedEvent.title}</DialogTitle>
                   <div className='flex items-center gap-4 text-sm text-gray-600'>
                     <div className='flex items-center gap-1'>
-                      <MapPin className='h-4 w-4' />
+                      <MapPin className='size-4' />
                       {selectedEvent.location}
                     </div>
                     <div className='flex items-center gap-1'>
-                      <Calendar className='h-4 w-4' />
+                      <Calendar className='size-4' />
                       締切: {new Date(selectedEvent.deadline).toLocaleDateString('ja-JP')}
                     </div>
                     <div className='flex items-center gap-1'>
-                      <Users className='h-4 w-4' />
+                      <Users className='size-4' />
                       {
                         selectedEvent.participants.filter((p) => p.status === 'approved').length
                       } / {selectedEvent.capacity}名
@@ -576,7 +576,7 @@ export default function Component() {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant='ghost' size='icon'>
-                      <MoreHorizontal className='h-4 w-4' />
+                      <MoreHorizontal className='size-4' />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align='end'>
@@ -584,19 +584,19 @@ export default function Component() {
                       <DropdownMenuItem
                         onClick={() => updateEventStatus(selectedEvent.id, 'paused')}
                       >
-                        <Pause className='mr-2 h-4 w-4' />
+                        <Pause className='mr-2 size-4' />
                         募集を一時停止
                       </DropdownMenuItem>
                     ) : (
                       <DropdownMenuItem
                         onClick={() => updateEventStatus(selectedEvent.id, 'active')}
                       >
-                        <Play className='mr-2 h-4 w-4' />
+                        <Play className='mr-2 size-4' />
                         募集を再開
                       </DropdownMenuItem>
                     )}
                     <DropdownMenuItem onClick={() => updateEventStatus(selectedEvent.id, 'closed')}>
-                      <Clock className='mr-2 h-4 w-4' />
+                      <Clock className='mr-2 size-4' />
                       募集を締切
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -611,7 +611,7 @@ export default function Component() {
               <TabsContent value='participants' className='space-y-4'>
                 {selectedEvent.participants.length === 0 ? (
                   <div className='py-8 text-center text-gray-500'>
-                    <Users className='mx-auto mb-4 h-12 w-12 text-gray-300' />
+                    <Users className='mx-auto mb-4 size-12 text-gray-300' />
                     <p>まだ参加申請がありません</p>
                   </div>
                 ) : (
@@ -652,7 +652,7 @@ export default function Component() {
                                 }
                                 className='border-green-200 text-green-600 hover:bg-green-50'
                               >
-                                <UserCheck className='h-4 w-4' />
+                                <UserCheck className='size-4' />
                               </Button>
                               <Button
                                 size='sm'
@@ -666,7 +666,7 @@ export default function Component() {
                                 }
                                 className='border-red-200 text-red-600 hover:bg-red-50'
                               >
-                                <UserX className='h-4 w-4' />
+                                <UserX className='size-4' />
                               </Button>
                             </div>
                           )}
@@ -717,7 +717,7 @@ export default function Component() {
                     </div>
                   </div>
                   <Button className='w-fit bg-rose-500 hover:bg-rose-600'>
-                    <Settings className='mr-2 h-4 w-4' />
+                    <Settings className='mr-2 size-4' />
                     設定を更新
                   </Button>
                 </div>

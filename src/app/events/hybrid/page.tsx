@@ -520,8 +520,8 @@ export default function Component() {
       return (
         <div className='fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-pink-50 to-rose-100'>
           <div className='space-y-6 text-center'>
-            <div className='mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-rose-100'>
-              <Sparkles className='h-12 w-12 text-rose-500' />
+            <div className='mx-auto flex size-24 items-center justify-center rounded-full bg-rose-100'>
+              <Sparkles className='size-12 text-rose-500' />
             </div>
             <div>
               <h2 className='mb-2 text-2xl font-bold text-gray-800'>
@@ -529,7 +529,7 @@ export default function Component() {
               </h2>
               <p className='mb-6 text-gray-600'>他のイベントも見てみませんか？</p>
               <Button onClick={closeSwipeMode} className='bg-rose-500 hover:bg-rose-600'>
-                <ArrowLeft className='mr-2 h-4 w-4' />
+                <ArrowLeft className='mr-2 size-4' />
                 イベント一覧に戻る
               </Button>
             </div>
@@ -551,11 +551,11 @@ export default function Component() {
                   onClick={closeSwipeMode}
                   className='hover:bg-rose-50'
                 >
-                  <ArrowLeft className='h-5 w-5 text-rose-500' />
+                  <ArrowLeft className='size-5 text-rose-500' />
                 </Button>
                 <div className='flex items-center gap-2'>
-                  <div className='flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-r from-rose-500 to-pink-500'>
-                    <Heart className='h-5 w-5 text-white' />
+                  <div className='flex size-8 items-center justify-center rounded-lg bg-gradient-to-r from-rose-500 to-pink-500'>
+                    <Heart className='size-5 text-white' />
                   </div>
                   <h1 className='bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-xl font-bold text-transparent'>
                     EventMatch
@@ -569,9 +569,9 @@ export default function Component() {
                   onClick={() => setShowMatches(true)}
                   className='relative hover:bg-rose-50'
                 >
-                  <MessageCircle className='h-5 w-5 text-rose-500' />
+                  <MessageCircle className='size-5 text-rose-500' />
                   {matches.length > 0 && (
-                    <div className='absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-rose-500'>
+                    <div className='absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-rose-500'>
                       <span className='text-xs font-bold text-white'>{matches.length}</span>
                     </div>
                   )}
@@ -629,7 +629,7 @@ export default function Component() {
                       <img
                         src={currentSwipeEvent.image || '/placeholder.svg'}
                         alt={currentSwipeEvent.title}
-                        className='h-full w-full rounded-t-lg object-cover'
+                        className='size-full rounded-t-lg object-cover'
                       />
                       <div className='absolute left-4 top-4'>
                         <Badge className='bg-white/90 font-medium text-gray-700'>
@@ -645,14 +645,14 @@ export default function Component() {
                       {/* Swipe Indicators */}
                       {dragOffset.x > 50 && (
                         <div className='absolute inset-0 flex items-center justify-center rounded-t-lg bg-green-500/20'>
-                          <div className='rotate-12 transform rounded-full bg-green-500 px-6 py-3 text-lg font-bold text-white'>
+                          <div className='rotate-12 rounded-full bg-green-500 px-6 py-3 text-lg font-bold text-white'>
                             LIKE
                           </div>
                         </div>
                       )}
                       {dragOffset.x < -50 && (
                         <div className='absolute inset-0 flex items-center justify-center rounded-t-lg bg-red-500/20'>
-                          <div className='-rotate-12 transform rounded-full bg-red-500 px-6 py-3 text-lg font-bold text-white'>
+                          <div className='-rotate-12 rounded-full bg-red-500 px-6 py-3 text-lg font-bold text-white'>
                             PASS
                           </div>
                         </div>
@@ -662,14 +662,14 @@ export default function Component() {
                     <CardContent className='flex-1 space-y-3 p-4'>
                       <div className='flex items-center gap-2'>
                         <div className='flex items-center gap-1'>
-                          <Star className='h-4 w-4 fill-yellow-400 text-yellow-400' />
+                          <Star className='size-4 fill-yellow-400 text-yellow-400' />
                           <span className='font-medium'>{currentSwipeEvent.rating}</span>
                           <span className='text-sm text-gray-500'>
                             ({currentSwipeEvent.reviewCount})
                           </span>
                         </div>
                         <div className='flex items-center gap-1 text-gray-500'>
-                          <MapPin className='h-4 w-4' />
+                          <MapPin className='size-4' />
                           <span className='text-sm'>{currentSwipeEvent.location}</span>
                         </div>
                       </div>
@@ -690,7 +690,7 @@ export default function Component() {
 
                       <div className='flex items-center justify-between pt-2'>
                         <div className='flex items-center gap-2'>
-                          <Avatar className='h-8 w-8'>
+                          <Avatar className='size-8'>
                             <AvatarImage
                               src={currentSwipeEvent.organizer.image || '/placeholder.svg'}
                             />
@@ -703,7 +703,7 @@ export default function Component() {
                           </span>
                         </div>
                         <div className='flex items-center gap-1 text-gray-500'>
-                          <Users className='h-4 w-4' />
+                          <Users className='size-4' />
                           <span className='text-sm'>
                             {
                               currentSwipeEvent.participants.filter((p) => p.status === 'approved')
@@ -724,17 +724,17 @@ export default function Component() {
               <Button
                 size='lg'
                 variant='outline'
-                className='h-16 w-16 rounded-full border-2 border-red-200 bg-transparent hover:border-red-300 hover:bg-red-50'
+                className='size-16 rounded-full border-2 border-red-200 bg-transparent hover:border-red-300 hover:bg-red-50'
                 onClick={() => handleSwipe('pass')}
               >
-                <X className='h-8 w-8 text-red-500' />
+                <X className='size-8 text-red-500' />
               </Button>
               <Button
                 size='lg'
-                className='h-16 w-16 rounded-full bg-rose-500 hover:bg-rose-600'
+                className='size-16 rounded-full bg-rose-500 hover:bg-rose-600'
                 onClick={() => handleSwipe('like')}
               >
-                <Heart className='h-8 w-8 text-white' />
+                <Heart className='size-8 text-white' />
               </Button>
             </div>
 
@@ -764,7 +764,7 @@ export default function Component() {
         <div className='container mx-auto px-6 py-4'>
           <div className='flex items-center justify-between'>
             <div className='flex items-center gap-8'>
-              <h1 className='text-2xl font-bold text-rose-500'>μ's MATCH!</h1>
+              <h1 className='text-2xl font-bold text-rose-500'>μ&apos;s MATCH!</h1>
               <div className='hidden items-center gap-6 md:flex'>
                 <Button variant='ghost' className='text-gray-700'>
                   チャット
@@ -778,7 +778,7 @@ export default function Component() {
               <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
                 <DialogTrigger asChild>
                   <Button className='bg-rose-500 hover:bg-rose-600'>
-                    <Plus className='mr-2 h-4 w-4' />
+                    <Plus className='mr-2 size-4' />
                     イベントを作成
                   </Button>
                 </DialogTrigger>
@@ -889,9 +889,9 @@ export default function Component() {
                 onClick={() => setShowMatches(true)}
                 className='relative hover:bg-rose-50'
               >
-                <Heart className='h-5 w-5 text-rose-500' />
+                <Heart className='size-5 text-rose-500' />
                 {matches.length > 0 && (
-                  <div className='absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-rose-500'>
+                  <div className='absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-rose-500'>
                     <span className='text-xs font-bold text-white'>{matches.length}</span>
                   </div>
                 )}
@@ -906,10 +906,10 @@ export default function Component() {
       </div>
 
       {/* Search and Filters */}
-      <div className='container mx-auto px-6 py-6'>
+      <div className='container mx-auto p-6'>
         <div className='mb-8 flex flex-col gap-4 md:flex-row'>
           <div className='relative flex-1'>
-            <Search className='absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 transform text-gray-400' />
+            <Search className='absolute left-3 top-1/2 size-5 -translate-y-1/2 text-gray-400' />
             <Input
               placeholder='イベントを検索...'
               value={searchQuery}
@@ -919,7 +919,7 @@ export default function Component() {
           </div>
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
             <SelectTrigger className='h-12 w-full md:w-48'>
-              <Filter className='mr-2 h-4 w-4' />
+              <Filter className='mr-2 size-4' />
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -956,7 +956,7 @@ export default function Component() {
                 <div className='absolute inset-0 flex items-center justify-center rounded-t-lg bg-black/0 transition-all duration-300 group-hover:bg-black/10'>
                   <div className='opacity-0 transition-opacity duration-300 group-hover:opacity-100'>
                     <div className='flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 backdrop-blur-sm'>
-                      <Heart className='h-4 w-4 text-rose-500' />
+                      <Heart className='size-4 text-rose-500' />
                       <span className='text-sm font-medium'>スワイプして選ぶ</span>
                     </div>
                   </div>
@@ -965,12 +965,12 @@ export default function Component() {
               <CardContent className='p-4'>
                 <div className='mb-2 flex items-center gap-2'>
                   <div className='flex items-center gap-1'>
-                    <Star className='h-4 w-4 fill-yellow-400 text-yellow-400' />
+                    <Star className='size-4 fill-yellow-400 text-yellow-400' />
                     <span className='text-sm font-medium'>{event.rating}</span>
                     <span className='text-sm text-gray-500'>({event.reviewCount})</span>
                   </div>
                   <div className='flex items-center gap-1 text-gray-500'>
-                    <MapPin className='h-4 w-4' />
+                    <MapPin className='size-4' />
                     <span className='text-sm'>{event.location}</span>
                   </div>
                 </div>
@@ -980,7 +980,7 @@ export default function Component() {
                 <p className='mb-3 line-clamp-2 text-sm text-gray-600'>{event.description}</p>
                 <div className='mb-3 flex items-center justify-between'>
                   <div className='flex items-center gap-2'>
-                    <Avatar className='h-6 w-6'>
+                    <Avatar className='size-6'>
                       <AvatarImage src={event.organizer.image || '/placeholder.svg'} />
                       <AvatarFallback>{event.organizer.name.charAt(0)}</AvatarFallback>
                     </Avatar>
@@ -1004,7 +1004,7 @@ export default function Component() {
         {filteredEvents.length === 0 && (
           <div className='py-12 text-center'>
             <div className='mb-4 text-gray-400'>
-              <Search className='mx-auto h-16 w-16' />
+              <Search className='mx-auto size-16' />
             </div>
             <h3 className='mb-2 text-xl font-semibold text-gray-600'>イベントが見つかりません</h3>
             <p className='text-gray-500'>検索条件を変更してお試しください</p>
@@ -1017,8 +1017,8 @@ export default function Component() {
         <Dialog open={!!showMatch} onOpenChange={() => setShowMatch(null)}>
           <DialogContent className='max-w-sm'>
             <div className='space-y-4 text-center'>
-              <div className='mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-r from-rose-500 to-pink-500'>
-                <Sparkles className='h-10 w-10 text-white' />
+              <div className='mx-auto flex size-20 items-center justify-center rounded-full bg-gradient-to-r from-rose-500 to-pink-500'>
+                <Sparkles className='size-10 text-white' />
               </div>
               <DialogHeader>
                 <DialogTitle className='bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-2xl text-transparent'>
@@ -1029,12 +1029,12 @@ export default function Component() {
                 </DialogDescription>
               </DialogHeader>
               <div className='flex items-center justify-center gap-4 py-4'>
-                <Avatar className='h-16 w-16'>
+                <Avatar className='size-16'>
                   <AvatarImage src='/placeholder.svg?height=64&width=64' />
                   <AvatarFallback>You</AvatarFallback>
                 </Avatar>
-                <Heart className='h-8 w-8 text-rose-500' />
-                <Avatar className='h-16 w-16'>
+                <Heart className='size-8 text-rose-500' />
+                <Avatar className='size-16'>
                   <AvatarImage src={showMatch.organizer.image || '/placeholder.svg'} />
                   <AvatarFallback>{showMatch.organizer.name.charAt(0)}</AvatarFallback>
                 </Avatar>
@@ -1051,14 +1051,14 @@ export default function Component() {
           <DialogContent className='max-w-md'>
             <DialogHeader>
               <DialogTitle className='flex items-center gap-2'>
-                <MessageCircle className='h-5 w-5 text-rose-500' />
+                <MessageCircle className='size-5 text-rose-500' />
                 マッチ一覧
               </DialogTitle>
             </DialogHeader>
             <div className='max-h-96 space-y-3 overflow-y-auto'>
               {matches.length === 0 ? (
                 <div className='py-8 text-center text-gray-500'>
-                  <Heart className='mx-auto mb-4 h-12 w-12 text-gray-300' />
+                  <Heart className='mx-auto mb-4 size-12 text-gray-300' />
                   <p>まだマッチがありません</p>
                   <p className='text-sm'>イベントにいいねしてマッチを見つけましょう！</p>
                 </div>
@@ -1071,7 +1071,7 @@ export default function Component() {
                     <img
                       src={match.event.image || '/placeholder.svg'}
                       alt={match.event.title}
-                      className='h-12 w-12 rounded-lg object-cover'
+                      className='size-12 rounded-lg object-cover'
                     />
                     <div className='flex-1'>
                       <h4 className='font-medium'>{match.event.title}</h4>

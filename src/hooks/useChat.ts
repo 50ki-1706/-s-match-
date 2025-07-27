@@ -1,7 +1,7 @@
 'use client';
 
 import { ChatRoomWithMessages } from '@/app/api/(type)/message';
-import { Message, User } from '@/lib/types/dm';
+import { Message, User } from '@/lib/types/chat';
 import { createClient, RealtimeChannel } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 

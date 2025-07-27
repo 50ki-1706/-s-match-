@@ -1,7 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-
 export const useMatch = () => {
   // イベント参加申請（Like時）
   const joinEvent = async (id: string): Promise<{ success: boolean; message?: string }> => {
@@ -23,7 +21,6 @@ export const useMatch = () => {
     }
   };
 
-  
   const getUserMatches = async () => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/matches`);
@@ -36,3 +33,4 @@ export const useMatch = () => {
       throw error;
     }
   };
+};
